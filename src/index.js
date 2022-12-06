@@ -1,8 +1,12 @@
+import './style.css';
+
 const cityInput = document.querySelector('input');
 const searchButton = document.querySelector('button');
 const weatherIcon = document.querySelector('img');
 const tempSpan = document.querySelector('.temp');
 const humiditySpan = document.querySelector('.humidity');
+const name = document.querySelector('.name');
+const description = document.querySelector('.description');
 
 function getWeatherData(location) {
     return fetch(
@@ -19,7 +23,7 @@ function getWeatherData(location) {
 async function filterData(location) {
     try {
         const allData = await getWeatherData(location);
-        const filteredData = [allData.main, allData.weather[0]];
+        const filteredData = [allData.main, allData.weather[0], allData.name];
         console.log(filteredData);
         return filteredData;
     } catch (error) {
@@ -40,6 +44,11 @@ function addWeatherInformation(filteredData) {
     tempSpan.textContent = `${temp}°C`;
     const { humidity } = filteredData[0];
     humiditySpan.textContent = `${humidity}%`;
+    const [, , cityName] = filteredData;
+    name.textContent = cityName;
+    const weatherDescription = filteredData[1].description;
+    description.textContent =
+        weatherDescription[0].toUpperCase() + weatherDescription.slice(1);
 }
 
 async function updateInformation(location) {
@@ -67,4 +76,4 @@ searchButton.addEventListener('click', () => {
     updateInformation(location);
 });
 
-updateInformation('tokyo');
+updateInformation('buenos aires');
