@@ -59,7 +59,7 @@ function addWeatherInformation(filteredData) {
     const { temp } = filteredData[0];
     tempSpan.textContent = `${temp}°C`;
     const { humidity } = filteredData[0];
-    humiditySpan.textContent = `${humidity}%`;
+    humiditySpan.textContent = `${humidity} %`;
     const { pressure } = filteredData[0];
     pressurePara.textContent = `${pressure} hPa`;
     const speed = filteredData[4];
