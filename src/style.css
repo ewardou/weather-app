@@ -1,16 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
 }
 
 header {
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 body {
     background-color: rgb(63, 63, 197);
+    min-height: 100vh;
 }
+
 input {
     border-radius: 10px;
     border: solid black 1px;
@@ -18,6 +23,7 @@ input {
     padding: 3px 5px;
     outline: none;
 }
+
 input:focus {
     outline: solid rgb(0, 153, 255) 2px;
     outline-offset: 0px;
@@ -37,7 +43,7 @@ button:enabled:hover {
     background-color: rgba(255, 255, 255, 0.8);
 }
 body > div {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
     color: white;
     font-weight: bold;
     margin: 20px auto;

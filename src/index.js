@@ -1,4 +1,12 @@
 import './style.css';
+import clearNight from './images/clear_night.jpg';
+import clear from './images/clear.jpg';
+import clouds from './images/clouds.jpg';
+import drizzle from './images/drizzle.jpg';
+import mist from './images/mist.jpg';
+import rain from './images/rain.jpg';
+import snow from './images/snow.jpg';
+import thunderstorm from './images/thunderstorm.jpg';
 
 const cityInput = document.querySelector('input');
 const searchButton = document.querySelector('button');
@@ -51,11 +59,43 @@ function addWeatherInformation(filteredData) {
         weatherDescription[0].toUpperCase() + weatherDescription.slice(1);
 }
 
+function changeBackground(filteredData) {
+    const includedTypes = {
+        Clear: clear,
+        Clouds: clouds,
+        Drizzle: drizzle,
+        Mist: mist,
+        Rain: rain,
+        Snow: snow,
+        Thunderstorm: thunderstorm,
+    };
+    const keys = Object.keys(includedTypes);
+    function setPath(type) {
+        const { body } = document;
+        body.setAttribute(
+            'style',
+            `background:url(${type});background-size:cover`
+        );
+    }
+    let { main } = filteredData[1];
+    if (main === 'Clear') {
+        const iconCode = filteredData[1].icon;
+        if (iconCode === '01n') {
+            return setPath(clearNight);
+        }
+    }
+    if (!keys.includes(main)) {
+        main = 'Mist';
+    }
+    setPath(includedTypes[main]);
+}
+
 async function updateInformation(location) {
     try {
         const filteredData = await filterData(location);
         setIconUrl(filteredData);
         addWeatherInformation(filteredData);
+        changeBackground(filteredData);
     } catch (error) {
         console.log(error);
     }
