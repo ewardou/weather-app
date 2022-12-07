@@ -15,6 +15,8 @@ const tempSpan = document.querySelector('.temp');
 const humiditySpan = document.querySelector('.humidity');
 const name = document.querySelector('.name');
 const description = document.querySelector('.description');
+const pressurePara = document.querySelector('.pressure');
+const windPara = document.querySelector('.wind');
 
 function getWeatherData(location) {
     return fetch(
@@ -31,7 +33,13 @@ function getWeatherData(location) {
 async function filterData(location) {
     try {
         const allData = await getWeatherData(location);
-        const filteredData = [allData.main, allData.weather[0], allData.name];
+        const filteredData = [
+            allData.main,
+            allData.weather[0],
+            allData.name,
+            allData.timezone,
+            allData.wind.speed,
+        ];
         console.log(filteredData);
         return filteredData;
     } catch (error) {
@@ -52,6 +60,10 @@ function addWeatherInformation(filteredData) {
     tempSpan.textContent = `${temp}°C`;
     const { humidity } = filteredData[0];
     humiditySpan.textContent = `${humidity}%`;
+    const { pressure } = filteredData[0];
+    pressurePara.textContent = `${pressure} hPa`;
+    const speed = filteredData[4];
+    windPara.textContent = `${speed} m/sec`;
     const [, , cityName] = filteredData;
     name.textContent = cityName;
     const weatherDescription = filteredData[1].description;
@@ -90,12 +102,62 @@ function changeBackground(filteredData) {
     setPath(includedTypes[main]);
 }
 
+function calculateLocalTime(filteredData) {
+    const timezone = filteredData[3] / 3600;
+    let hour;
+    let min;
+    if (Number.isFinite(timezone)) {
+        hour = timezone;
+        min = 0;
+    } else {
+        hour = Number.parseInt(timezone);
+        min = (timezone - hour) * 60;
+    }
+    const date = new Date();
+    const hourUTC = date.getUTCHours();
+    const minUTC = date.getUTCMinutes();
+
+    let localHour = hourUTC + hour;
+    let localMin = minUTC + min;
+
+    if (localMin >= 60) {
+        localMin -= 60;
+        localHour += 1;
+    } else if (localMin < 0) {
+        localMin += 60;
+        localHour -= 1;
+    }
+    if (localHour >= 24) {
+        localHour -= 24;
+    } else if (localHour < 0) {
+        localHour += 24;
+    }
+
+    return [localHour, localMin];
+}
+
+function formatLocalTime(hour, minutes) {
+    let hourString = String(hour);
+    let minutesString = String(minutes);
+    if (hourString.length === 1) {
+        hourString = `0${hourString}`;
+    }
+    if (minutesString.length === 1) {
+        minutesString = `0${minutesString}`;
+    }
+    document.querySelector(
+        '.time'
+    ).textContent = `${hourString}:${minutesString}`;
+}
+
 async function updateInformation(location) {
     try {
         const filteredData = await filterData(location);
         setIconUrl(filteredData);
         addWeatherInformation(filteredData);
         changeBackground(filteredData);
+        const time = calculateLocalTime(filteredData);
+        formatLocalTime(...time);
     } catch (error) {
         console.log(error);
     }
