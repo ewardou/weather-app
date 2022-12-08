@@ -17,17 +17,15 @@ const name = document.querySelector('.name');
 const description = document.querySelector('.description');
 const pressurePara = document.querySelector('.pressure');
 const windPara = document.querySelector('.wind');
+const errorSpan = document.querySelector('.error');
 
 function getWeatherData(location) {
     return fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=e4022b8ba431b294e64a06f720d56bf6&units=metric`
     )
         .then((response) => response.json())
-        .then((response) => {
-            console.log(response);
-            return response;
-        })
-        .catch((e) => console.error(e));
+        .then((response) => response)
+        .catch((e) => console.log(e));
 }
 
 async function filterData(location) {
@@ -40,9 +38,9 @@ async function filterData(location) {
             allData.timezone,
             allData.wind.speed,
         ];
-        console.log(filteredData);
         return filteredData;
     } catch (error) {
+        errorSpan.textContent = `"${location}" couldn't be found`;
         return console.error(error);
     }
 }
@@ -99,7 +97,7 @@ function changeBackground(filteredData) {
     if (!keys.includes(main)) {
         main = 'Mist';
     }
-    setPath(includedTypes[main]);
+    return setPath(includedTypes[main]);
 }
 
 function calculateLocalTime(filteredData) {
@@ -174,6 +172,7 @@ cityInput.addEventListener('input', () => {
 searchButton.addEventListener('click', () => {
     const location = cityInput.value;
     cityInput.value = '';
+    errorSpan.textContent = '';
     searchButton.setAttribute('disabled', '');
     updateInformation(location);
 });
