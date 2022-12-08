@@ -7,6 +7,13 @@ import mist from './images/mist.jpg';
 import rain from './images/rain.jpg';
 import snow from './images/snow.jpg';
 import thunderstorm from './images/thunderstorm.jpg';
+import timeSVG from './icons/time.svg';
+import windSVG from './icons/wind.svg';
+import waterSVG from './icons/water.svg';
+
+document.querySelector('.icon-time').setAttribute('src', timeSVG);
+document.querySelector('.icon-wind').setAttribute('src', windSVG);
+document.querySelector('.icon-humidity').setAttribute('src', waterSVG);
 
 const cityInput = document.querySelector('input');
 const searchButton = document.querySelector('button');
